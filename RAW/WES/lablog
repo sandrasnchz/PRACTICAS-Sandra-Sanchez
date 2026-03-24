@@ -1,0 +1,13 @@
+# Script to prepare FASTQ files
+
+echo "cat ND0013_S5_L00*_R1_001.fastq.gz > ND0013_R1.fastq.gz" >  _01_concat_lanes_WES.sh
+echo "cat ND0013_S5_L00*_R2_001.fastq.gz > ND0013_R2.fastq.gz" >> _01_concat_lanes_WES.sh
+
+echo "cat ND0323_S6_R1_001.fastq.gz > ND0323_R1.fastq.gz" >> _01_concat_lanes_WES.sh
+echo "cat ND0323_S6_R2_001.fastq.gz > ND0323_R2.fastq.gz" >> _01_concat_lanes_WES.sh
+
+echo "cat CC104ANXX_*_25realnf_1.fastq.gz CC1HGANXX_*_25realnf_1.fastq.gz CCB8FANXX_*_25realnf_1.fastq.gz > ND0463_R1.fastq.gz" >> _01_concat_lanes_WES.sh
+echo "cat CC104ANXX_*_25realnf_2.fastq.gz CC1HGANXX_*_25realnf_2.fastq.gz CCB8FANXX_*_25realnf_2.fastq.gz > ND0463_R2.fastq.gz" >> _01_concat_lanes_WES.sh
+
+echo "cat CC104ANXX_8_86realnf_1.fastq.gz CC1HGANXX_7_86realnf_1.fastq.gz CCB8FANXX_2_86realnf_1.fastq.gz > ND0693_R1.fastq.gz" >> _01_concat_lanes_WES.sh
+echo "cat CC104ANXX_8_86realnf_2.fastq.gz CC1HGANXX_7_86realnf_2.fastq.gz CCB8FANXX_2_86realnf_2.fastq.gz > ND0693_R2.fastq.gz" >> _01_concat_lanes_WES.sh
