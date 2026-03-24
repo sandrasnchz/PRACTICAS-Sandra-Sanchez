@@ -1,0 +1,13 @@
+# Script to prepare FASTQ files
+
+echo "cat *_222UDI-idt-UMI_1.fastq.gz > ND0013_R1.fastq.gz" > _01_concat_lanes_WGS.sh
+echo "cat *_222UDI-idt-UMI_2.fastq.gz > ND0013_R2.fastq.gz" >> _01_concat_lanes_WGS.sh
+
+echo "cat *_271UDI-idt-UMI_1.fastq.gz > ND0323_R1.fastq.gz" >> _01_concat_lanes_WGS.sh
+echo "cat *_271UDI-idt-UMI_2.fastq.gz > ND0323_R2.fastq.gz" >> _01_concat_lanes_WGS.sh
+
+echo "cat *_285UDI-idt-UMI_1.fastq.gz > ND0463_R1.fastq.gz" >> _01_concat_lanes_WGS.sh
+echo "cat *_285UDI-idt-UMI_2.fastq.gz > ND0463_R2.fastq.gz" >> _01_concat_lanes_WGS.sh
+
+echo "cat *_248UDI-idt-UMI_1.fastq.gz > ND0693_R1.fastq.gz" >> _01_concat_lanes_WGS.sh
+echo "cat *_248UDI-idt-UMI_2.fastq.gz > ND0693_R2.fastq.gz" >> _01_concat_lanes_WGS.sh
