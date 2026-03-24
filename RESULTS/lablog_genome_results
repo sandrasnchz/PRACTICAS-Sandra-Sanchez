@@ -1,0 +1,23 @@
+mkdir $(date '+%Y%m%d')_finish_genome01
+cd $(date '+%Y%m%d')_finish_genome01
+
+#Create symbolic links depending on the analysis
+#Individual files
+
+ln -s ../../ANALYSIS/20260216_ANALYSIS01_GENOME/ANALYSIS_WGS/99-stats/wgsMetrics_all.out mapping_metrics.csv
+ln -s ../../ANALYSIS/20260216_ANALYSIS01_GENOME/ANALYSIS_WGS/multiqc_joint_report/multiqc_joint_report.html
+ln -s ../../ANALYSIS/20260216_ANALYSIS01_GENOME/ANALYSIS_WGS/01-sarek_ND0013/multiqc/multiqc_report.html ND0013_multiqc_report.html
+ln -s ../../ANALYSIS/20260216_ANALYSIS01_GENOME/ANALYSIS_WGS/01-sarek_ND0323/multiqc/multiqc_report.html ND0323_multiqc_report.html
+ln -s ../../ANALYSIS/20260216_ANALYSIS01_GENOME/ANALYSIS_WGS/01-sarek_ND0463/multiqc/multiqc_report.html ND0463_multiqc_report.html
+ln -s ../../ANALYSIS/20260216_ANALYSIS01_GENOME/ANALYSIS_WGS/01-sarek_ND0693/multiqc/multiqc_report.html ND0693_multiqc_report.html
+ln -s ../../ANALYSIS/20260216_ANALYSIS01_GENOME/ANALYSIS_WGS/03-annotation/variants_annot_all_ND*.tab . 
+
+mkdir annotation_tables
+cd annotation_tables
+
+ln -s ../../../ANALYSIS/20260216_ANALYSIS01_GENOME/ANALYSIS_WGS/03-annotation/vep/ND0013/vep_annot_head.txt ND0013_vep_annot_head.txt
+ln -s ../../../ANALYSIS/20260216_ANALYSIS01_GENOME/ANALYSIS_WGS/03-annotation/vep/ND0323/vep_annot_head.txt ND0323_vep_annot_head.txt
+ln -s ../../../ANALYSIS/20260216_ANALYSIS01_GENOME/ANALYSIS_WGS/03-annotation/vep/ND0463/vep_annot_head.txt ND0463_vep_annot_head.txt
+ln -s ../../../ANALYSIS/20260216_ANALYSIS01_GENOME/ANALYSIS_WGS/03-annotation/vep/ND0693/vep_annot_head.txt ND0693_vep_annot_head.txt
+
+cd -
