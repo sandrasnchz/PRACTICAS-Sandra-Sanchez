@@ -1,0 +1,4 @@
+fasta: '/data/ucct/bi/references/igenomes/Homo_sapiens/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa'
+gtf: '/data/ucct/bi/references/igenomes/Homo_sapiens/Ensembl/GRCh37/Annotation/Genes/genes.gtf'
+aligner: star_salmon
+save_reference: true
