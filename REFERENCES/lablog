@@ -1,0 +1,14 @@
+## Copy reference files for whole-exome sequencing (WES) analysis
+rsync -rlv -aP /data/ucct/bi/pipelines/buisciii-tools/buisciii/templates/exometrio/REFERENCES/ .
+
+# ND0013
+rsync -rlv -aP /archived/ucct/bi/services_and_colaborations/IIER/human_genetics/SRVIIER014_20160225_TRIO03_JAlonso_S/RAW/enrichment_files/MedExome_hg19_capture_plus50pb_targets.bed .
+
+# ND0323
+rsync -rlv -aP /archived/ucct/bi/services_and_colaborations/IIER/human_genetics/SRVIIER064_20180109_TRIO036_BM_S/RAW/truseq-rapid-exome-targeted-regions-manifest-v1-2.chr_mod2.bed .
+
+# ND0463
+rsync -rlv -aP /archived/ucct/bi/services_and_colaborations/IIER/human_genetics/SRVIIER089_20180710_TRIO050_bmartinezd_S/RAW_NC/xgen-exome-research-panel-targets_reformat.bed .
+
+# ND0693
+rsync -rlv -aP /archived/ucct/bi/services_and_colaborations/IIER/human_genetics/SRVIIER096_20180710_TRIO057_bmartinezd_S/RAW_NC/xgen-exome-research-panel-targets_reformat.bed .
