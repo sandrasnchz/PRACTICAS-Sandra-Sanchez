@@ -1,0 +1,11 @@
+mkdir $(date '+%Y%m%d')_finish_rnaseq01
+cd $(date '+%Y%m%d')_finish_rnaseq01
+
+# Links to multiqc reports
+ln -s ../../ANALYSIS/20260209_ANALYSIS01_RNASEQ/*RNASEQ/01-rnaseq_hg19/multiqc/star_salmon/multiqc_report.html .
+
+# Links to counts files
+ln -s ../../ANALYSIS/20260209_ANALYSIS01_RNASEQ/*_RNASEQ/01-rnaseq_hg19/star_salmon/salmon.merged.gene_counts.tsv .
+ln -s ../../ANALYSIS/20260209_ANALYSIS01_RNASEQ/*_RNASEQ/01-rnaseq_hg19/star_salmon/salmon.merged.gene_tpm.tsv .
+ln -s ../../ANALYSIS/20260209_ANALYSIS01_RNASEQ/*_RNASEQ/01-rnaseq_hg19/star_salmon/salmon.merged.transcript_counts.tsv .
+ln -s ../../ANALYSIS/20260209_ANALYSIS01_RNASEQ/*_RNASEQ/01-rnaseq_hg19/star_salmon/salmon.merged.transcript_tpm.tsv .
