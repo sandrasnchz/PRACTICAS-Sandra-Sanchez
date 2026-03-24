@@ -1,0 +1,39 @@
+## Copy .fastq
+
+# RAW/WGS - POSADA_10
+# ND0013 (UDI 222)
+ln -s /srv/fastq_repo/POSADA_10_SRVIIER207-SRVIIER217/20200206/FASTQ/*_222UDI-idt-UMI_*.fastq.gz .
+# ND0323 (UDI 271)
+ln -s /srv/fastq_repo/POSADA_10_SRVIIER207-SRVIIER217/20200206/FASTQ/*_271UDI-idt-UMI_*.fastq.gz .
+# ND0463 (UDI 285)
+ln -s /srv/fastq_repo/POSADA_10_SRVIIER207-SRVIIER217/20200206/FASTQ/*_285UDI-idt-UMI_*.fastq.gz .
+# ND0693 (UDI 248)
+ln -s /srv/fastq_repo/POSADA_10_SRVIIER207-SRVIIER217/20200206/FASTQ/*_248UDI-idt-UMI_*.fastq.gz .
+
+
+# RAW/WES
+# ND0013
+rsync -rlv -aP /archived/ucct/bi/services_and_colaborations/IIER/human_genetics/SRVIIER014_20160225_TRIO03_JAlonso_S/RAW/WES/*.fastq.gz .
+# ND0323
+ln -s /srv/fastq_repo/NextSeq_CNM_086_20171221_BMartinez/ND0323*.fastq.gz .
+# ND0463 
+ln -s /srv/fastq_repo/RDCONNECT_01_SRVIIER089-SRVIIER096/20180510/FASTQ/*_25realnf_1.fastq.gz .
+ln -s /srv/fastq_repo/RDCONNECT_01_SRVIIER089-SRVIIER096/20180510/FASTQ/*_25realnf_2.fastq.gz . 
+# ND0693 
+ln -s /srv/fastq_repo/RDCONNECT_01_SRVIIER089-SRVIIER096/20180510/FASTQ/*_86realnf_1.fastq.gz .
+ln -s /srv/fastq_repo/RDCONNECT_01_SRVIIER089-SRVIIER096/20180510/FASTQ/*_86realnf_2.fastq.gz .
+
+
+# RAW/RNASEQ - POSADA_08
+# ND0013 (UDI 6_1)
+ln -s /srv/fastq_repo/POSADA_08_SRVIIER227-SRVIIER241/20200519/FASTQ/HGG2CBBXY_6_1UDI-idt-UMI_1.fastq.gz .
+ln -s /srv/fastq_repo/POSADA_08_SRVIIER227-SRVIIER241/20200519/FASTQ/HGG2CBBXY_6_1UDI-idt-UMI_2.fastq.gz .
+# ND0323 (UDI 7_39)
+ln -s /srv/fastq_repo/POSADA_08_SRVIIER227-SRVIIER241/20200519/FASTQ/HGG2CBBXY_7_39UDI-idt-UMI_1.fastq.gz .
+ln -s /srv/fastq_repo/POSADA_08_SRVIIER227-SRVIIER241/20200519/FASTQ/HGG2CBBXY_7_39UDI-idt-UMI_2.fastq.gz .
+# ND0463 (UDI 7_27)
+ln -s /srv/fastq_repo/POSADA_08_SRVIIER227-SRVIIER241/20200519/FASTQ/HGG2CBBXY_7_27UDI-idt-UMI_1.fastq.gz .
+ln -s /srv/fastq_repo/POSADA_08_SRVIIER227-SRVIIER241/20200519/FASTQ/HGG2CBBXY_7_27UDI-idt-UMI_2.fastq.gz .
+# ND0693 (UDI 6_73)
+ln -s /srv/fastq_repo/POSADA_08_SRVIIER227-SRVIIER241/20200519/FASTQ/HGG2CBBXY_6_73UDI-idt-UMI_1.fastq.gz .
+ln -s /srv/fastq_repo/POSADA_08_SRVIIER227-SRVIIER241/20200519/FASTQ/HGG2CBBXY_6_73UDI-idt-UMI_2.fastq.gz .
