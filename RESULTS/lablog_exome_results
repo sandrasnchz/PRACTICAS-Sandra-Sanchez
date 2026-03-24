@@ -1,0 +1,25 @@
+mkdir $(date '+%Y%m%d')_finish_exome01
+cd $(date '+%Y%m%d')_finish_exome01
+
+#Create symbolic links depending on the analysis
+#Individual files
+
+ln -s ../../ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/99-stats/hsMetrics_all.out mapping_metrics.csv
+ln -s ../../ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/multiqc_joint_report/multiqc_joint_report.html
+ln -s ../../ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/01-sarek_ND0013/multiqc/multiqc_report.html multiqc_report_ND0013.html
+ln -s ../../ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/01-sarek_ND0323/multiqc/multiqc_report.html multiqc_report_ND0323.html
+ln -s ../../ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/01-sarek_ND0463/multiqc/multiqc_report.html multiqc_report_ND0463.html
+ln -s ../../ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/01-sarek_ND0693/multiqc/multiqc_report.html multiqc_report_ND0693.html
+
+ln -s ../../ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/03-annotation/variants_annot_all_ND*.tab . 
+
+
+mkdir annotation_tables
+cd annotation_tables
+
+ln -s ../../../ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/03-annotation/vep/ND0013/vep_annot_head.txt ND0013_vep_annot_head.txt
+ln -s ../../../ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/03-annotation/vep/ND0323/vep_annot_head.txt ND0323_vep_annot_head.txt
+ln -s ../../../ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/03-annotation/vep/ND0463/vep_annot_head.txt ND0463_vep_annot_head.txt
+ln -s ../../../ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/03-annotation/vep/ND0693/vep_annot_head.txt ND0693_vep_annot_head.txt
+
+cd -
