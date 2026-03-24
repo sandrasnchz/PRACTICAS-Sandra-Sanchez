@@ -1,0 +1,20 @@
+# RNA-seq input preparation script
+# Creates directory structure, sample list and symbolic links to FASTQ files
+
+mkdir -p 00-reads
+
+cat << EOF > samples_id.txt
+ND0013
+ND0323
+ND0463
+ND0693
+EOF
+
+mkdir ANALYSIS_RNASEQ
+
+cd 00-reads
+
+ln -s ../../../RAW/RNASEQ/ND*_R1.fastq.gz .
+ln -s ../../../RAW/RNASEQ/ND*_R2.fastq.gz .
+
+cd -
