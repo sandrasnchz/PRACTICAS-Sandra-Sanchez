@@ -1,0 +1,47 @@
+# 99 - STATS (EXOME)
+
+# module load singularity
+
+mkdir -p logs
+
+PROJECT_DIR="/data/ucct/bi/research/20260204_TFM_SSANCHEZ_SM_SV_T"
+ANALYSIS_DIR="${PROJECT_DIR}/ANALYSIS/ANALYSIS01_EXOME/20260218_ANALYSIS01_EXOME"
+REF_GENOME="/data/ucct/bi/references/eukaria/homo_sapiens/hg19/1000genomes_b37/genome"
+FASTA="${REF_GENOME}/human_g1k_v37_decoy.fasta"
+
+# Sample-specific panels
+declare -A PANEL
+PANEL[ND0013]="MedExome_hg19_capture_plus50pb_targets.interval_list"
+PANEL[ND0323]="truseq-rapid-exome-targeted-regions-manifest-v1-2.chr_mod2.interval_list"
+PANEL[ND0463]="xgen-exome-research-panel-targets.interval_list"
+PANEL[ND0693]="xgen-exome-research-panel-targets.interval_list"
+
+SAMPLES="ND0013 ND0323 ND0463 ND0693"
+
+for SAMPLE in $SAMPLES; do
+  echo "srun --partition short_idx --mem 50G --time 2:00:00 \
+  --output logs/PICARDHSMETRICS.${SAMPLE}.%j.log \
+  --job-name PICARDHSMETRICS_${SAMPLE} \
+  singularity exec \
+  -B ${PROJECT_DIR} \
+  -B ${REF_GENOME} \
+  /data/ucct/bi/pipelines/singularity-images/picard:2.25.1--hdfd78af_1 \
+  picard CollectHsMetrics \
+  -R ${FASTA} \
+  -BI ${PROJECT_DIR}/REFERENCES/${PANEL[$SAMPLE]} \
+  -TI ${PROJECT_DIR}/REFERENCES/${PANEL[$SAMPLE]} \
+  -I ${ANALYSIS_DIR}/01-sarek_${SAMPLE}/preprocessing/recalibrated/${SAMPLE}/${SAMPLE}.recal.cram \
+  -O ${ANALYSIS_DIR}/99-stats/${SAMPLE}_hsMetrics.out \
+  -VALIDATION_STRINGENCY LENIENT &"
+done > _01_picardHsMetrics.sh
+
+
+# Summary table script
+echo 'echo "\"SAMPLE\",\"MEAN_TARGET_COVERAGE\",\"PCT_USABLE_BASES_ON_TARGET\",\"FOLD_ENRICHMENT\",\"PCT_TARGET_BASES_10X\",\"PCT_TARGET_BASES_20X\",\"PCT_TARGET_BASES_30X\",\"PCT_TARGET_BASES_40X\",\"PCT_TARGET_BASES_50X\"" > hsMetrics_all.out' > _02_hsMetrics_all.sh
+
+for SAMPLE in ND0013 ND0323 ND0463 ND0693; do
+  echo "grep -v '^#' ${SAMPLE}_hsMetrics.out | \
+  awk 'BEGIN{FS=\"\t\";OFS=\",\"} \
+  {print \"${SAMPLE}\",\$34,\$12,\$13,\$48,\$49,\$50,\$51,\$52}' \
+  >> hsMetrics_all.out"
+done >> _02_hsMetrics_all.sh
