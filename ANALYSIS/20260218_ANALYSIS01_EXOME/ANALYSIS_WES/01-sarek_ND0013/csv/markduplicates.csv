@@ -1,0 +1,2 @@
+patient,sex,status,sample,cram,crai,table
+ND0013,XY,0,ND0013,01-sarek_ND0013/preprocessing/markduplicates/ND0013/ND0013.md.cram,01-sarek_ND0013/preprocessing/markduplicates/ND0013/ND0013.md.cram.crai,01-sarek_ND0013/preprocessing/recal_table/ND0013/ND0013.recal.table
