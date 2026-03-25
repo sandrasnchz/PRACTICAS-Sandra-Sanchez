@@ -1,0 +1,2 @@
+patient,sex,status,sample,lane,fastq_1,fastq_2
+ND0693,XY,0,ND0693,1,00-reads/ND0693_R1.fastq.gz,00-reads/ND0693_R2.fastq.gz
