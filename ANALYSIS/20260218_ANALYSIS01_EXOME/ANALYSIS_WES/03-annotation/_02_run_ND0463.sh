@@ -1,0 +1,1 @@
+srun --partition short_idx --time 2:00:00 --chdir /data/ucct/bi/research/20260204_TFM_SSANCHEZ_SM-SV_T/ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/03-annotation --output logs/ND0463/BCFTOOLS.log --job-name BCF_ND0463 bash /data/ucct/bi/research/20260204_TFM_SSANCHEZ_SM-SV_T/ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/03-annotation/_02_ND0463_bcftools.sh &

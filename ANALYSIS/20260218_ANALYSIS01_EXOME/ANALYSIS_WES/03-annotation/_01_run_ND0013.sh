@@ -1,0 +1,1 @@
+srun --partition short_idx --time 2:00:00 --chdir /data/ucct/bi/research/20260204_TFM_SSANCHEZ_SM-SV_T/ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/03-annotation --output logs/ND0013/PREPARE.log --job-name PREP_ND0013 bash /data/ucct/bi/research/20260204_TFM_SSANCHEZ_SM-SV_T/ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/03-annotation/_01_ND0013_prepare.sh &

@@ -1,0 +1,1 @@
+grep -P '(HIGH|MODERATE)' /data/ucct/bi/research/20260204_TFM_SSANCHEZ_SM-SV_T/ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/03-annotation/variants_annot_all_ND0013.tab > /data/ucct/bi/research/20260204_TFM_SSANCHEZ_SM-SV_T/ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/03-annotation/variants_annot_highModerate_ND0013.tab

@@ -1,0 +1,1 @@
+srun --partition short_idx --mem 200G --time 12:00:00 --chdir /data/ucct/bi/research/20260204_TFM_SSANCHEZ_SM-SV_T/ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/03-annotation --output logs/ND0013/MERGE_ALL.log --job-name MERGE_ND0013 Rscript Merge_All.R ND0013 &

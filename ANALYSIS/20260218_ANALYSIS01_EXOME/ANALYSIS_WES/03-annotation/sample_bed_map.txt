@@ -1,0 +1,4 @@
+ND0013   MedExome_hg19_capture_plus50pb_targets_clean.bed
+ND0323   truseq-rapid-exome-targeted-regions-manifest-v1-2.chr_mod2_clean.bed
+ND0463   xgen-exome-research-panel-targets_reformat_clean.bed
+ND0693   xgen-exome-research-panel-targets_reformat_clean.bed

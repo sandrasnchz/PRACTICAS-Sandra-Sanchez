@@ -1,0 +1,1 @@
+java -Xms300g -Xmx300g -jar exomiser-cli-13.0.0.jar --analysis /data/ucct/bi/research/20260204_TFM_SSANCHEZ_SM-SV_T/ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/03-annotation/exomiser/ND0693/config.yml; rm -f /tmp/spring.log

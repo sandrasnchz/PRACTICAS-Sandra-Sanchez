@@ -1,0 +1,1 @@
+srun --partition short_idx --mem 350G --time 12:00:00 --chdir /data/ucct/bi/pipelines/exomiser/exomiser-cli-13.0.0 --output logs/ND0693/EXOMISER.log --job-name EXO_ND0693 bash /data/ucct/bi/research/20260204_TFM_SSANCHEZ_SM-SV_T/ANALYSIS/20260218_ANALYSIS01_EXOME/ANALYSIS_WES/03-annotation/aux_ND0693_exomiser.sh &
