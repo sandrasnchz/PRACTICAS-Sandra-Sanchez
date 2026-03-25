@@ -3,13 +3,15 @@ Bioinformatics analysis workflows and results from NGS-based genomic and transcr
 
 # Bioinformatics Analysis of NGS Data
 
-This repository contains the scripts, workflows and selected results generated during my internship, focused on the analysis of next-generation sequencing (NGS) data, including whole exome sequencing (WES), whole genome sequencing (WGS) and RNA-seq.
+This repository contains the scripts, workflows and selected results generated during my internship at Bioinformatics Unit of Instituto de Salud Carlos III (BU-ISCIII), focused on the analysis of next-generation sequencing (NGS) data, including Whole Exome Sequencing (WES), Whole Genome Sequencing (WGS) and RNA-seq.
 
 ## Contents
 
 - *ANALYSIS/*: Scripts and pipelines used for data processing and analysis (e.g., QC, alignment, variant calling).
 - *RESULTS/*: Relevant output files such as processed tables and figures derived from the analyses.
 - *DOC/*: Configuration files, parameters and additional documentation.
+- *RAW/*: Placeholder directory for raw sequencing data (not included in the repository due to size and privacy constraints).
+- *REFERENCES/*: Reference files used in the analyses (e.g., reference genomes, annotations, auxiliary resources).
 
 ## Notes
 
@@ -24,4 +26,4 @@ The aim of this project is to apply bioinformatics approaches to identify geneti
 - Nextflow / nf-core pipelines
 - R / Bioconductor
 - Python / Bash
-- Standard NGS tools (e.g., FastQC, BWA, GATK)
+- Standard NGS tools (e.g., FastQC, BWA, GATK, STAR)
