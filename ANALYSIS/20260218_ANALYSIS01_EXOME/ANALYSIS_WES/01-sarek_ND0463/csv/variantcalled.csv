@@ -1,0 +1,2 @@
+patient,sample,variantcaller,vcf
+all_samples,joint_variant_calling,haplotypecaller,01-sarek_ND0463/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz
