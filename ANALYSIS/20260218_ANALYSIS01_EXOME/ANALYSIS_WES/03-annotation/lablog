@@ -1,0 +1,177 @@
+# 03 - ANNOTATION (EXOME) 
+
+# module load singularity R
+# module load Java/17.0.2.lua R/4.2.1
+
+scratch_dir=$(echo $PWD | sed "s/\/data\/ucct\/bi\/scratch_tmp/\/scratch/g")
+
+ln -s /data/ucct/bi/references/eukaria/homo_sapiens/cache_vep/custom_databases/dbNSFP/GRCh37-4.3/dbNSFP_ENSG_gene_GRCh37.txt
+ln -s /data/ucct/bi/references/eukaria/homo_sapiens/cache_vep/custom_databases/dbNSFP/GRCh37-4.3/dbNSFP_ENSG_plugin_hg19.txt
+
+samples="ND0013 ND0323 ND0463 ND0693"
+
+for sample in $samples
+do
+    mkdir -p vep/${sample}
+    mkdir -p exomiser/${sample}
+    mkdir -p logs/${sample}
+done
+
+
+# 1. PREPARE VCF
+
+for sample in $samples
+do
+echo "zcat ../02-postprocessing/${sample}/${sample}_variants_fil.vcf.gz | \
+awk 'BEGIN{FS=\"\t\";OFS=\"\t\"} {if( \$0 ~ /^#/ ){print \$0}else{printf \"%s\t%s\t%s\t\", \$1,\$2,\$1\"_\"\$2\"_\"\$4\"_\"\$5 ; for (i=4; i<=NF; i++){printf \"%s\t\",\$i} ; printf \"\n\"}}' \
+> ./vep/${sample}/variants_fil_mod.vcf" > _01_${sample}_prepare.sh
+
+echo "sed -i 's/\t$//' ./vep/${sample}/variants_fil_mod.vcf" >> _01_${sample}_prepare.sh
+
+echo "srun --partition short_idx --time 2:00:00 \
+--chdir ${scratch_dir} \
+--output logs/${sample}/PREPARE.log \
+--job-name PREP_${sample} \
+bash ${scratch_dir}/_01_${sample}_prepare.sh &" \
+> _01_run_${sample}.sh
+
+done
+
+
+# 2. BCFTOOLS QUERY + CLEAN HEADER
+
+for sample in $samples
+do
+
+echo "singularity exec -B ${scratch_dir}/../../../ \
+/data/ucct/bi/pipelines/singularity-images/bcftools:1.12--h45bccc9_1 \
+bcftools query -H \
+-f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%FILTER\t[%GT\t%DP\t%AD\t%GQ\t]\n' \
+${scratch_dir}/vep/${sample}/variants_fil_mod.vcf \
+> ${scratch_dir}/vep/${sample}/variants.table" \
+> _02_${sample}_bcftools.sh
+
+echo "sed -i -r 's/(#|\\[[0-9]+\\])//g' ${scratch_dir}/vep/${sample}/variants.table" >> _02_${sample}_bcftools.sh
+echo "sed -i 's/:/_/g' ${scratch_dir}/vep/${sample}/variants.table" >> _02_${sample}_bcftools.sh
+echo "sed -i 's/ //g' ${scratch_dir}/vep/${sample}/variants.table" >> _02_${sample}_bcftools.sh
+echo "sed -i 's/\t*\$//g' ${scratch_dir}/vep/${sample}/variants.table" >> _02_${sample}_bcftools.sh
+
+echo "srun --partition short_idx --time 2:00:00 \
+--chdir ${scratch_dir} \
+--output logs/${sample}/BCFTOOLS.log \
+--job-name BCF_${sample} \
+bash ${scratch_dir}/_02_${sample}_bcftools.sh &" \
+> _02_run_${sample}.sh
+
+done
+
+
+# 3. VEP (Variant Effect Predictor)
+
+for sample in $samples
+do
+echo "srun --partition short_idx --mem 100G --time 12:00:00 \
+--chdir ${scratch_dir} \
+--output logs/${sample}/VEP.log \
+--job-name VEP_${sample} \
+singularity exec \
+-B /data/ucct/bi/references/eukaria/homo_sapiens/hg19/1000genomes_b37/genome/ \
+-B /data/ucct/bi/references/eukaria/homo_sapiens/cache_vep/ \
+-B ${scratch_dir}/../../../ \
+/data/ucct/bi/pipelines/singularity-images/ensembl-vep:103.1--pl5262h4a94de4_2 \
+vep --fasta /data/ucct/bi/references/eukaria/homo_sapiens/hg19/1000genomes_b37/genome/human_g1k_v37.fasta \
+-i ${scratch_dir}/vep/${sample}/variants_fil_mod.vcf \
+-o ${scratch_dir}/vep/${sample}/vep_annot.vcf \
+--cache --offline --dir_cache /data/ucct/bi/references/eukaria/homo_sapiens/cache_vep/ \
+--everything --assembly GRCh37 --tab &" \
+> _03_run_${sample}_vep.sh
+
+done
+
+
+# 3b. PARSE VEP OUTPUT
+
+for sample in $samples
+do
+echo "grep -v '^##' ./vep/${sample}/vep_annot.vcf > ./vep/${sample}/vep_annot_head.txt" > _03b_${sample}_parse.sh
+
+echo "sed -i 's/#Uploaded_variation/ID/' ./vep/${sample}/vep_annot_head.txt" >> _03b_${sample}_parse.sh
+
+echo "srun --partition short_idx --time 2:00:00 \
+--chdir ${scratch_dir} \
+--output logs/${sample}/PARSE.log \
+--job-name PARSE_${sample} \
+bash ${scratch_dir}/_03b_${sample}_parse.sh &" \
+> _03b_run_${sample}.sh
+
+done
+
+
+# 4. MERGE ALL
+
+for sample in $samples
+do
+echo "srun --partition short_idx --mem 200G --time 12:00:00 \
+--chdir ${scratch_dir} \
+--output logs/${sample}/MERGE_ALL.log \
+--job-name MERGE_${sample} \
+Rscript Merge_All.R ${sample} &" \
+> _04_run_${sample}_merge.sh
+
+done
+
+
+# 5. EXOMISER
+
+for sample in $samples
+do
+
+vcf_file=$(realpath ../02-postprocessing/${sample}/${sample}_variants_fil.vcf.gz)
+bed_name=$(awk -v s=$sample '$1==s {print $2}' sample_bed_map.txt)
+bed_file=$(realpath ../../../../REFERENCES/${bed_name})
+proband=$(singularity exec -B /data \
+/data/ucct/bi/pipelines/singularity-images/bcftools:1.12--h45bccc9_1 \
+bcftools query -l ${vcf_file})
+output_folder=$(realpath ./exomiser/${sample})
+
+echo "sed -e 's|VCF_FILE|${vcf_file}|g' \
+-e 's|PROBAND|${proband}|g' \
+-e 's|OUTPUT_FOLDER|${output_folder}/${sample}|g' \
+-e 's|BED_FILE|${bed_file}|g' \
+exomiser_configfile.yml > exomiser/${sample}/config.yml" \
+> _05_${sample}_config.sh
+
+echo "java -Xms300g -Xmx300g \
+-jar exomiser-cli-13.0.0.jar \
+--analysis ${scratch_dir}/exomiser/${sample}/config.yml; \
+rm -f /tmp/spring.log" \
+> aux_${sample}_exomiser.sh
+
+echo "srun --partition short_idx --mem 350G --time 12:00:00 \
+--chdir /data/ucct/bi/pipelines/exomiser/exomiser-cli-13.0.0 \
+--output logs/${sample}/EXOMISER.log \
+--job-name EXO_${sample} \
+bash ${scratch_dir}/aux_${sample}_exomiser.sh &" \
+> _05_run_${sample}_exomiser.sh
+
+done
+
+
+# 6. CONSEQUENCE FILTERING (HIGH + MODERATE)
+
+for sample in $samples
+do
+
+echo "grep -P '(HIGH|MODERATE)' ${scratch_dir}/variants_annot_all_${sample}.tab \
+> ${scratch_dir}/variants_annot_highModerate_${sample}.tab" \
+> _06_${sample}_conseq_filtering.sh
+
+
+echo "srun --partition short_idx --time 2:00:00 \
+--chdir ${scratch_dir} \
+--output logs/${sample}/CONSEQ_FILTER.log \
+--job-name CONSEQ_${sample} \
+bash ${scratch_dir}/_06_${sample}_conseq_filtering.sh &" \
+> _06_run_${sample}.sh
+
+done
