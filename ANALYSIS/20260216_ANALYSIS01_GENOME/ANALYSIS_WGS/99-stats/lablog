@@ -1,0 +1,46 @@
+# 99 - STATS (GENOME)
+
+# module load singularity
+
+mkdir -p logs
+
+PROJECT_DIR="/data/ucct/bi/research/20260204_TFM_SSANCHEZ_SM-SV_T"
+ANALYSIS_DIR="${PROJECT_DIR}/ANALYSIS/20260216_ANALYSIS01_GENOME/ANALYSIS_WGS"
+GENOME="/data/ucct/bi/references/eukaria/homo_sapiens/hg19/1000genomes_b37/genome/human_g1k_v37_decoy.fasta"
+
+echo "Generating Picard WGS metrics scripts..."
+
+
+> _01_picardWgsMetrics.sh
+
+for SAMPLE in ND0013 ND0323 ND0463 ND0693; do
+echo "srun --partition short_idx --mem 100G --time 2:00:00 \
+--output logs/PICARDWGSMETRICS.${SAMPLE}.%j.log \
+--job-name PICARDWGS_${SAMPLE} \
+singularity exec \
+-B ${PROJECT_DIR} \
+-B /data/ucct/bi/references/eukaria/homo_sapiens/hg19/1000genomes_b37/genome \
+/data/ucct/bi/pipelines/singularity-images/picard:2.25.1--hdfd78af_1 \
+picard CollectWgsMetrics \
+-R ${GENOME} \
+-I ${ANALYSIS_DIR}/01-sarek_${SAMPLE}/preprocessing/recalibrated/${SAMPLE}/${SAMPLE}.recal.cram \
+-O ${ANALYSIS_DIR}/99-stats/${SAMPLE}_wgsMetrics.out \
+-VALIDATION_STRINGENCY LENIENT" >> _01_picardWgsMetrics.sh
+done
+
+echo "Generating summary table..."
+
+
+> _02_wgsMetrics_all.sh
+
+echo 'echo "\"SAMPLE\",\"MEAN_COVERAGE\",\"PCT_10X\",\"PCT_20X\",\"PCT_30X\",\"PCT_40X\",\"PCT_50X\"" > wgsMetrics_all.out' >> _02_wgsMetrics_all.sh
+
+for SAMPLE in ND0013 ND0323 ND0463 ND0693; do
+echo "awk 'BEGIN{FS=\"\t\";OFS=\",\"} \
+/^GENOME_TERRITORY/ {getline; print \"${SAMPLE}\", \$2, \$16, \$18, \$20, \$21, \$22}' \
+${SAMPLE}_wgsMetrics.out >> wgsMetrics_all.out" >> _02_wgsMetrics_all.sh
+done
+
+chmod +x _01_picardWgsMetrics.sh
+chmod +x _02_wgsMetrics_all.sh
+
