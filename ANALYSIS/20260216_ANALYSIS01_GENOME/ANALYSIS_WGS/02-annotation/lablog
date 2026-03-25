@@ -1,0 +1,129 @@
+# 02 - POSTPROCESSING (apply variant filters to individual SAREK runs)
+
+# module load singularity
+
+scratch_dir=$(echo $PWD | sed "s/\/data\/ucct\/bi\/scratch_tmp/\/scratch/g")
+
+mkdir -p logs
+
+SAMPLES="ND0013 ND0323 ND0463 ND0693"
+
+# Create sample folders and log folders
+for SAMPLE in $SAMPLES; do
+    mkdir -p ${SAMPLE}
+    mkdir -p logs/${SAMPLE}
+done
+
+
+# 1. Separate SNPs and INDELs
+
+> _01_separate_snps_indels.sh
+
+for SAMPLE in $SAMPLES; do
+
+echo "srun --partition short_idx --time 12:00:00 \
+--chdir ${scratch_dir} \
+--output logs/${SAMPLE}/SELECTSNPS.log \
+--job-name SELECTSNPS_${SAMPLE} \
+singularity exec -B ${scratch_dir}/../../../ \
+/data/ucct/bi/pipelines/singularity-images/gatk4-spark:4.2.0.0--hdfd78af_1 \
+gatk SelectVariants \
+-V ${scratch_dir}/../01-sarek_${SAMPLE}/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz \
+-select-type SNP \
+-O ${scratch_dir}/${SAMPLE}/${SAMPLE}_snps.vcf.gz" >> _01_separate_snps_indels.sh
+
+
+echo "srun --partition short_idx --time 12:00:00 \
+--chdir ${scratch_dir} \
+--output logs/${SAMPLE}/SELECTINDELS.log \
+--job-name SELECTINDELS_${SAMPLE} \
+singularity exec -B ${scratch_dir}/../../../ \
+/data/ucct/bi/pipelines/singularity-images/gatk4-spark:4.2.0.0--hdfd78af_1 \
+gatk SelectVariants \
+-V ${scratch_dir}/../01-sarek_${SAMPLE}/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz \
+-select-type INDEL \
+-O ${scratch_dir}/${SAMPLE}/${SAMPLE}_indels.vcf.gz" >> _01_separate_snps_indels.sh
+
+done
+
+
+# 2. Apply filters
+
+> _02_filter.sh
+
+for SAMPLE in $SAMPLES; do
+
+echo "srun --partition short_idx --time 12:00:00 \
+--chdir ${scratch_dir} \
+--output logs/${SAMPLE}/FILSNP.log \
+--job-name FILSNP_${SAMPLE} \
+singularity exec -B ${scratch_dir}/../../../ \
+/data/ucct/bi/pipelines/singularity-images/gatk4-spark:4.2.0.0--hdfd78af_1 \
+gatk VariantFiltration \
+-V ${scratch_dir}/${SAMPLE}/${SAMPLE}_snps.vcf.gz \
+-filter 'QD < 2.0' --filter-name 'QD2' \
+-filter 'QUAL < 30.0' --filter-name 'QUAL30' \
+-filter 'SOR > 3.0' --filter-name 'SOR3' \
+-filter 'FS > 60.0' --filter-name 'FS60' \
+-filter 'MQ < 40.0' --filter-name 'MQ40' \
+-filter 'MQRankSum < -12.5' --filter-name 'MQRankSum-12.5' \
+-filter 'ReadPosRankSum < -8.0' --filter-name 'ReadPosRankSum-8' \
+-O ${scratch_dir}/${SAMPLE}/${SAMPLE}_snps_filtered.vcf.gz" >> _02_filter.sh
+
+
+echo "srun --partition short_idx --time 12:00:00 \
+--chdir ${scratch_dir} \
+--output logs/${SAMPLE}/FILINDEL.log \
+--job-name FILINDEL_${SAMPLE} \
+singularity exec -B ${scratch_dir}/../../../ \
+/data/ucct/bi/pipelines/singularity-images/gatk4-spark:4.2.0.0--hdfd78af_1 \
+gatk VariantFiltration \
+-V ${scratch_dir}/${SAMPLE}/${SAMPLE}_indels.vcf.gz \
+-filter 'QD < 2.0' --filter-name 'QD2' \
+-filter 'QUAL < 30.0' --filter-name 'QUAL30' \
+-filter 'FS > 200.0' --filter-name 'FS200' \
+-filter 'ReadPosRankSum < -20.0' --filter-name 'ReadPosRankSum-20' \
+-O ${scratch_dir}/${SAMPLE}/${SAMPLE}_indels_filtered.vcf.gz" >> _02_filter.sh
+
+done
+
+
+# 3. Merge filtered VCFs
+
+> _03_merge_vcfs.sh
+
+for SAMPLE in $SAMPLES; do
+
+echo "srun --partition short_idx --time 12:00:00 \
+--chdir ${scratch_dir} \
+--output logs/${SAMPLE}/MERGE.log \
+--job-name MERGE_${SAMPLE} \
+singularity exec -B ${scratch_dir}/../../../ \
+/data/ucct/bi/pipelines/singularity-images/gatk4-spark:4.2.0.0--hdfd78af_1 \
+gatk MergeVcfs \
+-I ${scratch_dir}/${SAMPLE}/${SAMPLE}_snps_filtered.vcf.gz \
+-I ${scratch_dir}/${SAMPLE}/${SAMPLE}_indels_filtered.vcf.gz \
+-O ${scratch_dir}/${SAMPLE}/${SAMPLE}_variants_fil.vcf.gz" >> _03_merge_vcfs.sh
+
+done
+
+
+# 4. Index final VCFs
+
+> _04_index.sh
+
+for SAMPLE in $SAMPLES; do
+
+echo "srun --partition short_idx --time 1:00:00 \
+--chdir ${scratch_dir} \
+--output logs/${SAMPLE}/INDEX.log \
+--job-name INDEX_${SAMPLE} \
+singularity exec -B ${scratch_dir}/../../../ \
+/data/ucct/bi/pipelines/singularity-images/gatk4-spark:4.2.0.0--hdfd78af_1 \
+gatk IndexFeatureFile \
+-I ${scratch_dir}/${SAMPLE}/${SAMPLE}_variants_fil.vcf.gz" >> _04_index.sh
+
+done
+
+
+echo "Post-processing scripts generated successfully"
