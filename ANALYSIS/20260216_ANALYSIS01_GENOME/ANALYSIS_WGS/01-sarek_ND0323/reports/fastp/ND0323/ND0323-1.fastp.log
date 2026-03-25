@@ -1,0 +1,39 @@
+Read1 before filtering:
+total reads: 375657338
+total bases: 56724258038
+Q20 bases: 55813249583(98.394%)
+Q30 bases: 54051456418(95.2881%)
+
+Read2 before filtering:
+total reads: 375657338
+total bases: 56724258038
+Q20 bases: 55405231340(97.6747%)
+Q30 bases: 53127864613(93.6599%)
+
+Read1 after filtering:
+total reads: 371928988
+total bases: 56151326131
+Q20 bases: 55332508283(98.5418%)
+Q30 bases: 53615201500(95.4834%)
+
+Read2 after filtering:
+total reads: 371928988
+total bases: 56148676530
+Q20 bases: 55039319268(98.0243%)
+Q30 bases: 52825871860(94.0821%)
+
+Filtering result:
+reads passed filter: 743857976
+reads failed due to low quality: 6524736
+reads failed due to too many N: 48214
+reads failed due to too short: 883750
+
+Duplication rate: 9.83332%
+
+Insert size peak (evaluated by paired-end reads): 219
+
+JSON report: ND0323-1.fastp.json
+HTML report: ND0323-1.fastp.html
+
+fastp --in1 ND0323-1_1.fastq.gz --in2 ND0323-1_2.fastq.gz --out1 ND0323-1_1.fastp.fastq.gz --out2 ND0323-1_2.fastp.fastq.gz --json ND0323-1.fastp.json --html ND0323-1.fastp.html --thread 12 --detect_adapter_for_pe --disable_adapter_trimming --split_by_lines 200000000 
+fastp v0.23.2, time used: 2048 seconds
