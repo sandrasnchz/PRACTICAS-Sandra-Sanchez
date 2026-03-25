@@ -1,0 +1,1 @@
+awk 'NR==1 || $0 ~ /(HIGH|MODERATE)/' /data/ucct/bi/research/20260204_TFM_SSANCHEZ_SM-SV_T/ANALYSIS/20260216_ANALYSIS01_GENOME/ANALYSIS_WGS/03-annotation/variants_annot_all_ND0013.tab > /data/ucct/bi/research/20260204_TFM_SSANCHEZ_SM-SV_T/ANALYSIS/20260216_ANALYSIS01_GENOME/ANALYSIS_WGS/03-annotation/variants_annot_highModerate_ND0013.tab
