@@ -1,5 +1,4 @@
 # PRACTICAS-Sandra-Sanchez
-Bioinformatics analysis workflows and results from NGS-based genomic and transcriptomic studies (WES/WGS/RNA-seq), including scripts, configurations and reproducible pipelines.
 
 # Bioinformatics Analysis of NGS Data
 
