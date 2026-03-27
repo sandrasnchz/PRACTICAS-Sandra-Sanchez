@@ -1,5 +1,3 @@
-# PRACTICAS-Sandra-Sanchez
-
 # Bioinformatics Analysis of NGS Data
 
 This repository contains the scripts, workflows and selected results generated during my internship at Bioinformatics Unit of Instituto de Salud Carlos III (BU-ISCIII), focused on the analysis of next-generation sequencing (NGS) data, including Whole Exome Sequencing (WES), Whole Genome Sequencing (WGS) and RNA-seq.
