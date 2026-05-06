@@ -1,0 +1,21 @@
+# WES input preparation script
+# Creates directory structure, sample list and symbolic links to FASTQ files
+
+mkdir -p 00-reads
+
+cat << EOF > samples_id.txt
+S_UDP_001
+S_UDP_002
+S_UDP_003
+S_UDP_004
+
+EOF
+
+mkdir ANALYSIS_WES
+
+cd 00-reads
+
+ln -s ../../../RAW/WES/ND*_R1.fastq.gz .
+ln -s ../../../RAW/WES/ND*_R2.fastq.gz .
+
+cd -
