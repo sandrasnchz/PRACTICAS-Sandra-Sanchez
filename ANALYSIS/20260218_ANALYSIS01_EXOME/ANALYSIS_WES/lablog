@@ -1,0 +1,168 @@
+# 01 - SAREK EXOME ANALYSIS
+
+# Load required modules
+module load Nextflow singularity
+
+# Link input data
+ln -s ../00-reads/ .
+ln -s ../samples_id.txt .
+
+# Create required directories
+mkdir -p 02-postprocessing 03-annotation 99-stats
+
+# Create samplesheet for nf-core/sarek
+
+# S_UDP_001
+cat <<EOF > samplesheet_S_UDP_001.csv
+patient,sex,status,sample,lane,fastq_1,fastq_2
+S_UDP_001,XY,0,S_UDP_001,1,00-reads/S_UDP_001_R1.fastq.gz,00-reads/S_UDP_001_R2.fastq.gz
+EOF
+
+# S_UDP_002
+cat <<EOF > samplesheet_S_UDP_002.csv
+patient,sex,status,sample,lane,fastq_1,fastq_2
+S_UDP_002,XY,0,S_UDP_002,1,00-reads/S_UDP_002_R1.fastq.gz,00-reads/S_UDP_002_R2.fastq.gz
+EOF
+
+# S_UDP_003
+cat <<EOF > samplesheet_S_UDP_003.csv
+patient,sex,status,sample,lane,fastq_1,fastq_2
+S_UDP_003,XY,0,S_UDP_003,1,00-reads/S_UDP_003_R1.fastq.gz,00-reads/S_UDP_003_R2.fastq.gz
+EOF
+
+# S_UDP_004
+cat <<EOF > samplesheet_S_UDP_004.csv
+patient,sex,status,sample,lane,fastq_1,fastq_2
+S_UDP_004,XY,0,S_UDP_004,1,00-reads/S_UDP_004_R1.fastq.gz,00-reads/S_UDP_004_R2.fastq.gz
+EOF
+
+# Prepare SLURM submission script
+scratch_dir=$(echo $PWD | sed "s|/data/ucct/bi/scratch_tmp|/scratch|")
+
+# S_UDP_001
+
+cat <<EOF > sarek_S_UDP_001.sbatch
+#!/bin/bash
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=48G
+#SBATCH --time=2-00:00:00
+#SBATCH --partition=middle_idx
+#SBATCH --output=sarek_S_UDP_001_%j.log
+
+export NXF_OPTS="-Xms2G -Xmx48G"
+
+nextflow run /data/ucct/bi/pipelines/nf-core-sarek/nf-core-sarek-3.1.1/workflow/main.nf \
+    -c ../../../DOC/hpc_slurm_sarek.config \
+    --input samplesheet_S_UDP_001.csv \
+    --outdir 01-sarek_S_UDP_001 \
+    --genome GATK.GRCh37 \
+    --wes \
+    --intervals ../../../REFERENCES/MedExome_hg19_capture_plus50pb_targets.bed \
+    --dbsnp /data/ucct/bi/references/eukaria/homo_sapiens/hg19/1000genomes_b37/variants/20131208/dbsnp_138_mod.b37.vcf.gz \
+    --dbsnp_tbi /data/ucct/bi/references/eukaria/homo_sapiens/hg19/1000genomes_b37/variants/20131208/dbsnp_138_mod.b37.vcf.gz.tbi \
+    --tools haplotypecaller \
+    --joint_germline \
+    --save_reference \
+    --igenomes_ignore \
+    --igenomes_base /data/ucct/bi/references/igenomes/ \
+    -resume
+EOF
+
+echo "sbatch sarek_S_UDP_001.sbatch" > _01_run_sarek_S_UDP_001.sh
+
+# S_UDP_002
+
+cat <<EOF > sarek_S_UDP_002.sbatch
+#!/bin/bash
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=48G
+#SBATCH --time=2-00:00:00
+#SBATCH --partition=middle_idx
+#SBATCH --output=sarek_S_UDP_002_%j.log
+
+export NXF_OPTS="-Xms2G -Xmx48G"
+
+nextflow run /data/ucct/bi/pipelines/nf-core-sarek/nf-core-sarek-3.1.1/workflow/main.nf \
+    -c ../../../DOC/hpc_slurm_sarek.config \
+    --input samplesheet_S_UDP_002.csv \
+    --outdir 01-sarek_S_UDP_002 \
+    --genome GATK.GRCh37 \
+    --wes \
+    --intervals ../../../REFERENCES/truseq-rapid-exome-targeted-regions-manifest-v1-2.chr_mod2_clean.bed \
+    --dbsnp /data/ucct/bi/references/eukaria/homo_sapiens/hg19/1000genomes_b37/variants/20131208/dbsnp_138_mod.b37.vcf.gz \
+    --dbsnp_tbi /data/ucct/bi/references/eukaria/homo_sapiens/hg19/1000genomes_b37/variants/20131208/dbsnp_138_mod.b37.vcf.gz.tbi \
+    --tools haplotypecaller \
+    --joint_germline \
+    --save_reference \
+    --igenomes_ignore \
+    --igenomes_base /data/ucct/bi/references/igenomes/ \
+    -resume
+EOF
+
+echo "sbatch sarek_S_UDP_002.sbatch" > _01_run_sarek_S_UDP_002.sh
+
+# S_UDP_003
+
+cat <<EOF > sarek_S_UDP_003.sbatch
+#!/bin/bash
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=48G
+#SBATCH --time=2-00:00:00
+#SBATCH --partition=middle_idx
+#SBATCH --output=sarek_S_UDP_003_%j.log
+
+export NXF_OPTS="-Xms2G -Xmx48G"
+
+nextflow run /data/ucct/bi/pipelines/nf-core-sarek/nf-core-sarek-3.1.1/workflow/main.nf \
+    -c ../../../DOC/hpc_slurm_sarek.config \
+    --input samplesheet_S_UDP_003.csv \
+    --outdir 01-sarek_S_UDP_003 \
+    --genome GATK.GRCh37 \
+    --wes \
+    --intervals ../../../REFERENCES/xgen-exome-research-panel-targets_reformat_clean.bed \
+    --dbsnp /data/ucct/bi/references/eukaria/homo_sapiens/hg19/1000genomes_b37/variants/20131208/dbsnp_138_mod.b37.vcf.gz \
+    --dbsnp_tbi /data/ucct/bi/references/eukaria/homo_sapiens/hg19/1000genomes_b37/variants/20131208/dbsnp_138_mod.b37.vcf.gz.tbi \
+    --tools haplotypecaller \
+    --joint_germline \
+    --save_reference \
+    --igenomes_ignore \
+    --igenomes_base /data/ucct/bi/references/igenomes/ \
+    -resume
+EOF
+
+echo "sbatch sarek_S_UDP_003.sbatch" > _01_run_sarek_S_UDP_003.sh
+
+# S_UDP_004
+
+cat <<EOF > sarek_S_UDP_004.sbatch
+#!/bin/bash
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=48G
+#SBATCH --time=2-00:00:00
+#SBATCH --partition=middle_idx
+#SBATCH --output=sarek_S_UDP_004_%j.log
+
+export NXF_OPTS="-Xms2G -Xmx48G"
+
+nextflow run /data/ucct/bi/pipelines/nf-core-sarek/nf-core-sarek-3.1.1/workflow/main.nf \
+    -c ../../../DOC/hpc_slurm_sarek.config \
+    --input samplesheet_S_UDP_004.csv \
+    --outdir 01-sarek_S_UDP_004 \
+    --genome GATK.GRCh37 \
+    --wes \
+    --intervals ../../../REFERENCES/xgen-exome-research-panel-targets_reformat_clean.bed \
+    --dbsnp /data/ucct/bi/references/eukaria/homo_sapiens/hg19/1000genomes_b37/variants/20131208/dbsnp_138_mod.b37.vcf.gz \
+    --dbsnp_tbi /data/ucct/bi/references/eukaria/homo_sapiens/hg19/1000genomes_b37/variants/20131208/dbsnp_138_mod.b37.vcf.gz.tbi \
+    --tools haplotypecaller \
+    --joint_germline \
+    --save_reference \
+    --igenomes_ignore \
+    --igenomes_base /data/ucct/bi/references/igenomes/ \
+    -resume
+EOF
+
+echo "sbatch sarek_S_UDP_004.sbatch" > _01_run_sarek_S_UDP_004.sh
