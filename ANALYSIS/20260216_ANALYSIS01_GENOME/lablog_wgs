@@ -1,0 +1,21 @@
+# WGS input preparation script
+# Creates directory structure, sample list and symbolic links to FASTQ files
+
+mkdir -p 00-reads
+
+cat << EOF > samples_id.txt
+S_UDP_001
+S_UDP_002
+S_UDP_003
+S_UDP_004
+
+EOF
+
+mkdir -p ANALYSIS_WGS
+
+cd 00-reads
+
+ln -s ../../../RAW/WGS/ND*_R1.fastq.gz .
+ln -s ../../../RAW/WGS/ND*_R2.fastq.gz .
+
+cd -
