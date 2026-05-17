@@ -31,8 +31,8 @@ cat <<EOF > rnaseq.sbatch
 export NXF_OPTS="-Xms500M -Xmx4G"
 
 /data/ucct/bi/pipelines/nf-core-rnaseq/nf-core-rnaseq-3.14.0/main.nf \\
-  -c /data/ucct/bi/research/20260204_TFM_SSANCHEZ_SM_SV_T/DOC/hpc_slurm_rnaseq.config \\
-  -params-file /data/ucct/bi/research/20260204_TFM_SSANCHEZ_SM_SV_T/DOC/hg19_ensmbl_rnaseq.yml \\
+  -c ../../../DOC/hpc_slurm_rnaseq.config \\
+  -params-file ../../../DOC/hg19_ensmbl_rnaseq.yml \\
   --input samplesheet.csv \\
   --outdir 01-rnaseq \\
   --skip_markduplicates \\
